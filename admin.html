@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OneLive Admin</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"></script>
+    <script src="https://ivanlulyf.github.io/elaina/elaina.js"></script>
+</head>
+<body>
+<div id="app"></div>
+<script>
+    (function () {
+        var prevPath = '';
+        Elaina.configure({
+            pages: './admin',
+            widgets: './widget',
+            traits: './trait',
+            debug: true,
+            scope: '/live/',
+            version: '0.0.1',
+        }).router(function (pageInfo) {
+            if (pageInfo.path !== prevPath) {
+                prevPath = pageInfo.path;
+                Elaina.render(Elaina.el, pageInfo.path);
+            }
+        }).mount('#app');
+    })();
+</script>
+</body>
+</html>

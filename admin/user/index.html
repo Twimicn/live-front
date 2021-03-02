@@ -1,0 +1,78 @@
+<title>用户管理</title>
+<template>
+    <div id="table"></div>
+</template>
+<script use-widget="table">
+    (function () {
+        var table = Elaina.widget('#table', 'table', {
+            title: '用户管理',
+            mod: 'user',
+            columns: [
+                {column: 'id', text: 'ID'},
+                {column: 'username', text: '用户名'},
+                {column: 'name', text: '姓名'},
+                {column: 'email', text: '邮箱'},
+                {column: 'phone', text: '手机'},
+                {
+                    column: 'roleId', text: '角色', tpl: function (data) {
+                        return Constant.USER_ROLES[data.roleId];
+                    }
+                },
+                {
+                    column: 'state', text: '状态', tpl: function (data) {
+                        return Constant.USER_STATE[data.state];
+                    }
+                },
+            ],
+            toolbar: [
+                {action: 'add', color: 'success', text: '新增'},
+            ],
+            rowOp: [
+                {
+                    action: 'active', tpl: function (item) {
+                        if (item.state === 0 || item.state === 2) {
+                            return {
+                                text: '激活',
+                                color: 'success',
+                            }
+                        } else if (item.state === 1) {
+                            return {
+                                text: '禁用',
+                                color: 'warning',
+                            }
+                        }
+                    }
+                },
+            ],
+        });
+        table.on('tool', function (action, item, index, handler) {
+            if (action === 'active') {
+                var newState = (item.state === 0 || item.state === 2) ? 1 : 2;
+                Utils.apiPost('api/user/updateState', {
+                    id: item.id,
+                    state: newState,
+                }).done(function (res) {
+                    if (!res || res.status !== 0) {
+                        Utils.tipBox(res.msg);
+                        return;
+                    }
+                    handler.update({state: newState})
+                });
+            } else if (action === 'edit') {
+                Elaina.navigate('', {
+                    mod: 'user',
+                    action: 'edit',
+                    id: item.id,
+                })
+            }
+        });
+        table.on('toolbar', function (action) {
+            if (action === 'add') {
+                Elaina.navigate('', {
+                    mod: 'user',
+                    action: 'add',
+                })
+            }
+        });
+    })();
+</script>

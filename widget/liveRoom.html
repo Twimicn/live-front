@@ -1,0 +1,46 @@
+<template>
+    <div class="alert alert-success" role="alert">
+        测试直播间
+    </div>
+    <div class="live-room">
+
+    </div>
+</template>
+<style>
+    .live-room {
+        height: 600px;
+        overflow: auto;
+        border-radius: 4px;
+    }
+</style>
+<script>
+    function LiveRoom($elem, conf) {
+        var that = this;
+        this.room = conf.room || 0;
+        this.$elem = $elem;
+        this.socket = new SockJS(Elaina.data('apiUrl') + 'ws');
+        this.client = Stomp.over(this.socket);
+        this.client.debug = null;
+        this.client.connect({}, function (res) {
+            that.listen();
+        }, function (err) {
+
+        });
+    }
+
+    LiveRoom.prototype.listen = function () {
+        var that = this;
+        this.client.subscribe('/topic/channel/' + this.room, function (res) {
+            var msg = JSON.parse(res.body);
+            var timestamp = (new Date(msg.timestamp)).toLocaleString();
+            var username = msg.username || '主播';
+            that.$elem.find('.live-room').prepend('<div class="card mt-2"><div class="card-body"><div class="media"><div class="media-body small"><div><span class="username"><a class="text-muted font-weight-bold">' + username + '</a></span><span class="text-grey ml-2">' + timestamp + '</span></div></div></div>' + msg.content + '</div></div>');
+        });
+    };
+
+    LiveRoom.prototype.unload = function () {
+        this.client.disconnect();
+    };
+
+    Elaina.defineWidget(LiveRoom);
+</script>

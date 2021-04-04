@@ -12,6 +12,8 @@
     <script src="https://ivanlulyf.github.io/elaina/elaina.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="js/util.js"></script>
+    <script src="js/constant.js"></script>
 </head>
 <body>
 <div id="app"></div>
@@ -28,7 +30,7 @@
             traits: './trait',
             debug: true,
             scope: '/live/',
-            version: '20210304',
+            version: '20210405',
         }).router(function (pageInfo) {
             if (pageInfo.path !== prevPath) {
                 prevPath = pageInfo.path;

@@ -1,0 +1,57 @@
+<title>我的直播</title>
+<template>
+    <div id="table"></div>
+</template>
+<script use-widget="table">
+    (function () {
+        var table = Elaina.widget('#table', 'table', {
+            title: '我的直播',
+            mod: 'live',
+            columns: [
+                {column: 'liveId', text: 'ID'},
+                {column: 'title', text: '标题'},
+                {
+                    column: 'state', text: '状态', tpl: function (data) {
+                        return Constant.LIVE_STATE[data.state];
+                    }
+                },
+            ],
+            toolbar: [
+                {action: 'add', color: 'success', text: '发起直播'},
+            ],
+            rowOp: [
+                {action: 'view', text: '查看', color: 'info'},
+            ],
+        });
+        table.on('tool', function (action, item, index, handler) {
+            if (action === 'view') {
+                Elaina.navigate('', {
+                    mod: 'live',
+                    action: 'view',
+                    id: item.liveId,
+                })
+            }
+        });
+        table.on('toolbar', function (action) {
+            if (action === 'add') {
+                var inputBox = Utils.inputBox('发起直播', '请输入直播标题');
+                inputBox.on('input', function (text) {
+                    var data = {
+                        title: text,
+                    };
+                    Utils.apiPost('api/live/create', data).done(function (res) {
+                        if (!res || res.status !== 0) {
+                            Utils.tipBox(res.msg);
+                            return;
+                        }
+                        Elaina.navigate('', {
+                            mod: 'live',
+                            action: 'view',
+                            id: res.data.liveId,
+                        });
+                    });
+                });
+            }
+        });
+    })();
+</script>

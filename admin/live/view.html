@@ -1,0 +1,46 @@
+<template>
+    <div id="live_form">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+            <h1 class="h2" page-id="title">直播</h1>
+        </div>
+        <form page-id="form" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="content">内容</label>
+                <textarea class="form-control" id="content" name="content" required=""></textarea>
+            </div>
+            <button type="submit" class="btn btn-success">提交</button>
+        </form>
+    </div>
+    <div id="live_room">
+    </div>
+</template>
+<style>
+    .live-room{
+        height: 500px;
+    }
+</style>
+<script use-widget="liveRoom">
+    var router = Elaina.router();
+    $('#live_form').submit(function () {
+        var loadingBox = Utils.loadingBox('发布中...');
+        $(this).ajaxSubmit({
+            url: Elaina.data('apiUrl') + 'api/live/push/' + router.query.id,
+            method:'POST',
+            data: {token: Elaina.storage('user').token},
+            dataType: 'json',
+            success: function (res) {
+                if (res.status !== 0) {
+                    Utils.showAlert('#alert_container', res.msg, 'danger', true);
+                }
+                loadingBox.hide();
+            }, error: function () {
+                loadingBox.hide();
+                Utils.tipBox('服务器发生了一些错误');
+            }
+        });
+        return false;
+    });
+    var liveRoom = Elaina.widget('#live_room', 'liveRoom', {
+        liveId: router.query.id,
+    });
+</script>

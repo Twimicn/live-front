@@ -16,25 +16,57 @@
 <script>
     function LiveRoom($elem, conf) {
         var that = this;
-        this.room = conf.room || 0;
+        this.liveId = conf.liveId;
         this.$elem = $elem;
         this.socket = new SockJS(Elaina.data('apiUrl') + 'ws');
         this.client = Stomp.over(this.socket);
-        this.client.debug = null;
+        //this.client.debug = null;
         this.client.connect({}, function (res) {
             that.listen();
         }, function (err) {
 
         });
+        this.loadHistory();
     }
+
+    LiveRoom.prototype.loadHistory = function () {
+        var that = this;
+        Utils.apiPost('api/live/list/' + this.liveId, {}).done(function (res) {
+            if (!res || res.status !== 0) {
+                Utils.tipBox(res.msg);
+                return;
+            }
+            $.each(res.data.list, function (i, msg) {
+                that.createItem(msg);
+            })
+        });
+    };
+
+    LiveRoom.prototype.createItem = function (msg) {
+        if (msg.type === 0) {
+            if (msg.content === 'stop') {
+                this.$elem.find('.live-room').prepend('<div class="alert alert-warning" role="alert">直播已结束</div>');
+            } else if (msg.content === 'update') {
+
+            }
+        } else {
+            var timestamp = (new Date(msg.timestamp)).toLocaleString();
+            var username = msg.username || '主播';
+            var card = $('<div class="card mt-2"><div class="card-body"><div class="media"><div class="media-body small"><div><span class="username"><a class="text-muted font-weight-bold">' + username + '</a></span><span class="text-grey ml-2">' + timestamp + '</span></div></div></div><div class="live-card-content"></div></div></div>');
+            var contentArea = card.find('.live-card-content');
+            contentArea.text(msg.content);
+            if (msg.type === 2 && msg.extra) {
+                contentArea.after('<img class="img-fluid" alt="" src="' + msg.extra + '"/>')
+            }
+            this.$elem.find('.live-room').prepend(card);
+        }
+    };
 
     LiveRoom.prototype.listen = function () {
         var that = this;
-        this.client.subscribe('/topic/channel/' + this.room, function (res) {
+        this.client.subscribe('/topic/channel/' + this.liveId, function (res) {
             var msg = JSON.parse(res.body);
-            var timestamp = (new Date(msg.timestamp)).toLocaleString();
-            var username = msg.username || '主播';
-            that.$elem.find('.live-room').prepend('<div class="card mt-2"><div class="card-body"><div class="media"><div class="media-body small"><div><span class="username"><a class="text-muted font-weight-bold">' + username + '</a></span><span class="text-grey ml-2">' + timestamp + '</span></div></div></div>' + msg.content + '</div></div>');
+            that.createItem(msg);
         });
     };
 

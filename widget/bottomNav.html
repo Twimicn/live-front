@@ -1,0 +1,76 @@
+<template>
+    <div class="bottom-nav-item-group">
+        <div class="bottom-nav-item current">
+            <div class="bottom-nav-item-icon ol-icon ol-icon-home"></div>
+            <div class="bottom-nav-item-text">主页</div>
+        </div>
+        <div class="bottom-nav-item">
+            <div class="bottom-nav-item-icon ol-icon ol-icon-search"></div>
+            <div class="bottom-nav-item-text">搜索</div>
+        </div>
+        <div class="bottom-nav-item">
+            <div class="bottom-nav-item-icon ol-icon ol-icon-menu"></div>
+            <div class="bottom-nav-item-text">资讯</div>
+        </div>
+        <div class="bottom-nav-item">
+            <div class="bottom-nav-item-icon ol-icon ol-icon-user"></div>
+            <div class="bottom-nav-item-text">我的</div>
+        </div>
+    </div>
+</template>
+<style>
+    .bottom-nav {
+        width: 100%;
+        border-top: solid 1px #ccc;
+        background-color: #edededcc;
+        position: fixed;
+        bottom: 0;
+        z-index: 99;
+        box-shadow: 0 -1px 16px #bfbebe;
+    }
+
+    .bottom-nav-item-group {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .bottom-nav-item {
+        padding: 0.25rem 0.75rem;
+    }
+
+    .bottom-nav-item-icon {
+        font-size: 2.5rem;
+        line-height: 1;
+        text-align: center;
+        color: #999999;
+    }
+
+    .bottom-nav-item-text {
+        font-size: 0.25rem;
+        text-align: center;
+        color: #555555;
+    }
+
+    .bottom-nav-item.current .bottom-nav-item-icon,
+    .bottom-nav-item.current .bottom-nav-item-text {
+        color: deepskyblue;
+    }
+
+</style>
+<script>
+    function BottomNav($elem, conf) {
+        this.$elem = $elem;
+        $elem.addClass('bottom-nav');
+    }
+
+    BottomNav.prototype.created = function () {
+        var that = this;
+        this.$elem.find('.bottom-nav-item-group').on('click', '.bottom-nav-item', function (e) {
+            $(this).addClass('current').siblings().removeClass('current');
+            that.$emit('change', {index: $(this).index()})
+        });
+    };
+
+    Elaina.defineWidget(BottomNav);
+</script>

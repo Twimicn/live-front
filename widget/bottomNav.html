@@ -1,21 +1,6 @@
 <template>
     <div class="bottom-nav-item-group">
-        <div class="bottom-nav-item current">
-            <div class="bottom-nav-item-icon ol-icon ol-icon-home"></div>
-            <div class="bottom-nav-item-text">主页</div>
-        </div>
-        <div class="bottom-nav-item">
-            <div class="bottom-nav-item-icon ol-icon ol-icon-search"></div>
-            <div class="bottom-nav-item-text">搜索</div>
-        </div>
-        <div class="bottom-nav-item">
-            <div class="bottom-nav-item-icon ol-icon ol-icon-menu"></div>
-            <div class="bottom-nav-item-text">资讯</div>
-        </div>
-        <div class="bottom-nav-item">
-            <div class="bottom-nav-item-icon ol-icon ol-icon-user"></div>
-            <div class="bottom-nav-item-text">我的</div>
-        </div>
+
     </div>
 </template>
 <style>
@@ -59,18 +44,35 @@
 
 </style>
 <script>
-    function BottomNav($elem, conf) {
-        this.$elem = $elem;
-        $elem.addClass('bottom-nav');
-    }
+    (function () {
+        function BottomNav($elem, conf) {
+            this.$elem = $elem;
+            this.navs = [];
+            $elem.addClass('bottom-nav');
+        }
 
-    BottomNav.prototype.created = function () {
-        var that = this;
-        this.$elem.find('.bottom-nav-item-group').on('click', '.bottom-nav-item', function (e) {
-            $(this).addClass('current').siblings().removeClass('current');
-            that.$emit('change', {index: $(this).index()})
-        });
-    };
+        BottomNav.prototype.created = function () {
+            var that = this;
+            this.$elem.find('.bottom-nav-item-group').on('click', '.bottom-nav-item', function (e) {
+                $(this).addClass('current').siblings().removeClass('current');
+                var index = $(this).index();
+                var nav = that.navs[index];
+                that.$emit('change', {index: index, nav: nav, action: nav.action})
+            });
+        };
 
-    Elaina.defineWidget(BottomNav);
+        BottomNav.prototype.setNavs = function (list, index) {
+            if ($.isArray(list)) {
+                this.navs = list;
+                var html = '';
+                for (var i = 0; i < list.length; i++) {
+                    var f = list[i];
+                    html += '<div class="bottom-nav-item' + (i === index ? ' current' : '') + '"><div class="bottom-nav-item-icon ol-icon ol-icon-' + f.icon + '"></div><div class="bottom-nav-item-text">' + f.text + '</div></div>'
+                }
+                this.$elem.find('.bottom-nav-item-group').html(html);
+            }
+        };
+
+        Elaina.defineWidget(BottomNav);
+    })();
 </script>

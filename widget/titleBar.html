@@ -42,33 +42,35 @@
     }
 </style>
 <script>
-    function TitleBar($elem, conf) {
-        $elem.addClass('title-bar');
-        this.$elem = $elem;
-        this.setTitle(conf.title);
-        if (conf.leftIcon) this.setLeftIcon(conf.leftIcon);
-        if (conf.rightIcon) this.setRightIcon(conf.rightIcon);
-    }
+    (function () {
+        function TitleBar($elem, conf) {
+            $elem.addClass('title-bar');
+            this.$elem = $elem;
+            this.setTitle(conf.title);
+            if (conf.leftIcon) this.setLeftIcon(conf.leftIcon);
+            if (conf.rightIcon) this.setRightIcon(conf.rightIcon);
+        }
 
-    TitleBar.prototype.$click = function (e, which) {
-        this.$emit('click', which);
-    };
+        TitleBar.prototype.$click = function (e, which) {
+            this.$emit('click', which);
+        };
 
-    TitleBar.prototype.setTitle = function (title) {
-        this.$elem.find('.title-bar-text').html(title || '');
-    };
+        TitleBar.prototype.setTitle = function (title) {
+            this.$elem.find('.title-bar-text').html(title || '');
+        };
 
-    TitleBar.prototype.setLeftIcon = function (icon) {
-        var oldClass = this.leftIcon;
-        this.leftIcon = 'ol-icon-' + icon;
-        this.$elem.find('.title-bar-icon-left').removeClass(oldClass).addClass(this.leftIcon).show();
-    };
+        TitleBar.prototype.setLeftIcon = function (icon) {
+            var oldClass = this.leftIcon;
+            this.leftIcon = 'ol-icon-' + icon;
+            this.$elem.find('.title-bar-icon-left').removeClass(oldClass).addClass(this.leftIcon).show();
+        };
 
-    TitleBar.prototype.setRightIcon = function (icon) {
-        var oldClass = this.rightIcon;
-        this.rightIcon = 'ol-icon-' + icon;
-        this.$elem.find('.title-bar-icon-right').removeClass(oldClass).addClass(this.rightIcon).show();
-    };
+        TitleBar.prototype.setRightIcon = function (icon) {
+            var oldClass = this.rightIcon;
+            this.rightIcon = 'ol-icon-' + icon;
+            this.$elem.find('.title-bar-icon-right').removeClass(oldClass).addClass(this.rightIcon).show();
+        };
 
-    Elaina.defineWidget(TitleBar);
+        Elaina.defineWidget(TitleBar);
+    })();
 </script>

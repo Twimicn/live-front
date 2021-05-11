@@ -1,26 +1,74 @@
 <template>
+    <div class="title-bar-icon title-bar-icon-left ol-icon" style="display: none;" @click='$click("left")'></div>
+    <div class="title-bar-text"></div>
+    <div class="title-bar-icon title-bar-icon-right ol-icon" style="display: none;" @click='$click("right")'></div>
 </template>
 <style>
     .title-bar {
         position: sticky;
+        display: flex;
         top: 0;
         background: deepskyblue;
         color: white;
         text-align: center;
-        padding: 14px;
         z-index: 99;
         box-shadow: 0 1px 16px #888888;
+    }
+
+    .title-bar-text {
+        flex: 1;
+        text-align: center;
+        padding: 0.75rem;
+    }
+
+    .title-bar-icon {
+        display: inline-block;
+        font-size: 1.5rem;
+        line-height: 1;
+        padding: 0.75rem;
+        cursor: pointer;
+    }
+
+    .title-bar-icon:hover {
+        opacity: .8;
+    }
+
+    .title-bar-icon.title-bar-icon-left {
+        margin-left: 0.25rem;
+    }
+
+    .title-bar-icon.title-bar-icon-right {
+        margin-right: 0.25rem;
     }
 </style>
 <script>
     function TitleBar($elem, conf) {
         $elem.addClass('title-bar');
+        this.$elem = $elem;
         this.setTitle(conf.title);
+        if (conf.leftIcon) this.setLeftIcon(conf.leftIcon);
+        if (conf.rightIcon) this.setRightIcon(conf.rightIcon);
     }
+
+    TitleBar.prototype.$click = function (e, which) {
+        this.$emit('click', which);
+    };
 
     TitleBar.prototype.setTitle = function (title) {
-        $elem.html(title || '');
-    }
+        this.$elem.find('.title-bar-text').html(title || '');
+    };
 
-    Elaina.defineWidget();
+    TitleBar.prototype.setLeftIcon = function (icon) {
+        var oldClass = this.leftIcon;
+        this.leftIcon = 'ol-icon-' + icon;
+        this.$elem.find('.title-bar-icon-left').removeClass(oldClass).addClass(this.leftIcon).show();
+    };
+
+    TitleBar.prototype.setRightIcon = function (icon) {
+        var oldClass = this.rightIcon;
+        this.rightIcon = 'ol-icon-' + icon;
+        this.$elem.find('.title-bar-icon-right').removeClass(oldClass).addClass(this.rightIcon).show();
+    };
+
+    Elaina.defineWidget(TitleBar);
 </script>

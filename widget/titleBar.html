@@ -1,0 +1,26 @@
+<template>
+</template>
+<style>
+    .title-bar {
+        position: sticky;
+        top: 0;
+        background: deepskyblue;
+        color: white;
+        text-align: center;
+        padding: 14px;
+        z-index: 99;
+        box-shadow: 0 1px 16px #888888;
+    }
+</style>
+<script>
+    function TitleBar($elem, conf) {
+        $elem.addClass('title-bar');
+        this.setTitle(conf.title);
+    }
+
+    TitleBar.prototype.setTitle = function (title) {
+        $elem.html(title || '');
+    }
+
+    Elaina.defineWidget();
+</script>

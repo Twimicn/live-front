@@ -1,6 +1,10 @@
 <template>
-    <div auto-widget="titleBar" data-title="直播"></div>
+    <div id="title_bar" auto-widget="titleBar" data-title="直播" data-left-icon="left" data-right-icon="search"></div>
+    <div id="bottom_nav" auto-widget="bottomNav"></div>
 </template>
-<script use-widget="titleBar">
-
+<script use-widget="titleBar,bottomNav">
+    var $titleBar = Elaina.widget('#title_bar');
+    $titleBar.$on('click',function (which) {
+        console.log(which)
+    })
 </script>

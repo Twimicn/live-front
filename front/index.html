@@ -1,10 +1,24 @@
 <template>
     <div id="title_bar" auto-widget="titleBar" data-title="直播" data-left-icon="left" data-right-icon="search"></div>
+    <div id="main_container"></div>
     <div id="bottom_nav" auto-widget="bottomNav"></div>
 </template>
 <script use-widget="titleBar,bottomNav">
-    var $titleBar = Elaina.widget('#title_bar');
-    $titleBar.$on('click',function (which) {
-        console.log(which)
-    })
+    (function () {
+        var $titleBar = Elaina.widget('#title_bar');
+        $titleBar.$on('click', function (which) {
+            console.log(which)
+        });
+        var $bottomNav = Elaina.widget('#bottom_nav');
+        $bottomNav.setNavs([
+            {icon: 'home', text: '主页', action: 'home'},
+            {icon: 'search', text: '搜索', action: 'search'},
+            {icon: 'menu', text: '资讯', action: 'info'},
+            {icon: 'user', text: '我的', action: 'my'},
+        ], 0);
+        $bottomNav.$on('change', function (data) {
+            Elaina.render('#main_container', '/' + data.action);
+        });
+        Elaina.render('#main_container', '/home');
+    })();
 </script>

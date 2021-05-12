@@ -1,11 +1,10 @@
 <template>
-    <div id="live_list" auto-widget="listView" class="live-list-container">
+    <div page-id="live_list" auto-widget="listView" class="live-list-container">
         <div class="live-list-item" data-id="{{this.liveId}}" item-click="enter">
             <h4>{{this.title}}{{this.status!==0?'<span class="live-list-item-status success">直播中</span>':'<span
                     class="live-list-item-status">已结束</span>'}}</h4>
             <p>额外信息</p>
         </div>
-        >
     </div>
 </template>
 <style>
@@ -42,16 +41,24 @@
 </style>
 <script>
     (function () {
-        var liveListView = Elaina.widget('#live_list');
-        liveListView.$on('enter', function (data) {
-            Elaina.navigate('/live?id=' + data.data.liveId);
-        });
-        Utils.apiPost('api/live/list', {}).then(function (res) {
-            var list = $.map(res.data.list, function (x) {
-                if (x) x.extraInfo = x.extra ? JSON.parse(x.extra) : {};
-                return x;
+        function HomeFragment($elem, conf) {
+            this.$liveListView = Elaina.widget($elem.find('[page-id="live_list"]'));
+        }
+
+        HomeFragment.prototype.created = function () {
+            var that = this;
+            this.$liveListView.$on('enter', function (data) {
+                Elaina.navigate('/live?id=' + data.data.liveId);
             });
-            liveListView.setList(list);
-        });
+            Utils.apiPost('api/live/list', {}).then(function (res) {
+                var list = $.map(res.data.list, function (x) {
+                    if (x) x.extraInfo = x.extra ? JSON.parse(x.extra) : {};
+                    return x;
+                });
+                that.$liveListView.setList(list);
+            });
+        };
+
+        Elaina.defineWidget(HomeFragment);
     })()
 </script>

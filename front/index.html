@@ -3,7 +3,7 @@
     <div id="main_container"></div>
     <div id="bottom_nav" auto-widget="bottomNav"></div>
 </template>
-<script use-widget="titleBar,bottomNav,listView">
+<script use-widget="titleBar,bottomNav,listView,homeFragment,infoFragment,myFragment,searchFragment">
     (function () {
         var $titleBar = Elaina.widget('#title_bar');
         $titleBar.$on('click', function (which) {
@@ -17,8 +17,8 @@
             {icon: 'user', text: '我的', action: 'my'},
         ], 0);
         $bottomNav.$on('change', function (data) {
-            Elaina.render('#main_container', '/' + data.action);
+            Elaina.widget('#main_container', data.action + 'Fragment', {});
         });
-        Elaina.render('#main_container', '/home');
+        Elaina.widget('#main_container', 'homeFragment', {});
     })();
 </script>

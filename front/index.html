@@ -1,9 +1,9 @@
 <template>
-    <div id="title_bar" auto-widget="titleBar" data-title="直播" data-left-icon="left" data-right-icon="search"></div>
+    <div id="title_bar" auto-widget="titleBar" data-title="直播" data-left-icon="" data-right-icon=""></div>
     <div id="main_container"></div>
     <div id="bottom_nav" auto-widget="bottomNav"></div>
 </template>
-<script use-widget="titleBar,bottomNav">
+<script use-widget="titleBar,bottomNav,listView">
     (function () {
         var $titleBar = Elaina.widget('#title_bar');
         $titleBar.$on('click', function (which) {

@@ -1,46 +1,23 @@
 <template>
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-        <a class="navbar-brand" href="#">OneLive</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="collapsibleNavbar">
-            <ul class="navbar-nav mr-auto">
+    <div id="title_bar" auto-widget="titleBar" data-title="直播" data-left-icon="left" data-right-icon="comment"></div>
+    <div class="" id="live_room">
 
-            </ul>
-            <ul class="navbar-nav">
-
-            </ul>
-        </div>
-    </nav>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-9" id="live_room">
-
-            </div>
-            <div class="col-lg-3">
-
-            </div>
-        </div>
     </div>
-    <footer>
-        <div class="container mt-4">
-            <div class="center-block"><p class="text-center">OneLive</p></div>
-        </div>
-    </footer>
 </template>
 <style>
-    body {
-        margin: 0 auto;
-        padding-top: 70px;
-        padding-bottom: 55px;
-        background-color: #f5f5f5;
-        overflow-x: hidden;
-    }
+
 </style>
-<script use-widget="liveRoom">
-    var router = Elaina.router();
-    var liveRoom = Elaina.widget('#live_room', 'liveRoom', {
-        liveId: router.query.id,
-    });
+<script use-widget="titleBar,bottomNav,listView,liveRoom">
+    (function () {
+        var router = Elaina.router();
+        var liveRoom = Elaina.widget('#live_room', 'liveRoom', {
+            liveId: router.query.id,
+        });
+        var $titleBar = Elaina.widget('#title_bar');
+        $titleBar.$on('click', function (which) {
+            if (which === 'left') {
+                Elaina.navigate('/index')
+            }
+        });
+    })();
 </script>

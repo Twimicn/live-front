@@ -1,5 +1,5 @@
 <template>
-    <div class="alert alert-success" role="alert">
+    <div auto-widget="liveDetail">
         测试直播间
     </div>
     <div class="live-room">
@@ -13,12 +13,13 @@
         border-radius: 4px;
     }
 </style>
-<script>
+<script use-widget=".liveDetail">
     function LiveRoom($elem, conf) {
         var that = this;
+        this.baseUrl = Elaina.data('apiUrl');
         this.liveId = conf.liveId;
         this.$elem = $elem;
-        this.socket = new SockJS(Elaina.data('apiUrl') + 'ws');
+        this.socket = new SockJS(this.baseUrl + 'ws');
         this.client = Stomp.over(this.socket);
         //this.client.debug = null;
         this.client.connect({}, function (res) {
@@ -47,7 +48,7 @@
             if (msg.content === 'stop') {
                 this.$elem.find('.live-room').prepend('<div class="alert alert-warning" role="alert">直播已结束</div>');
             } else if (msg.content === 'update') {
-
+                console.log(msg.extra)
             }
         } else {
             var timestamp = (new Date(msg.timestamp)).toLocaleString();

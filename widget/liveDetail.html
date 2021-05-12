@@ -1,0 +1,24 @@
+<template>
+    <div class="card text-center mt-2 mb-2">
+        <div  class="card-img-top">
+            XX vs XXX
+        </div>
+        <div class="card-body">
+            <div class="live-detail-content">
+
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    function LiveDetail($elem, conf) {
+
+    }
+
+    LiveDetail.prototype.setData = function (data) {
+        if (!data) return;
+        if (typeof data !== 'object') data = JSON.parse(data);
+    };
+
+    Elaina.defineWidget(LiveDetail);
+</script>

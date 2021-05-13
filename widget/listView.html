@@ -74,6 +74,10 @@
             this.setList(conf.data);
         }
 
+        ListView.prototype.addTextFunc = function (name, func) {
+            if (typeof func === 'function' && !ELAINA_TEXT[name]) ELAINA_TEXT[name] = func;
+        };
+
         ListView.prototype.createItem = function (item, front) {
             if (!item) return;
             var that = this;

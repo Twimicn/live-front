@@ -1,9 +1,21 @@
 <template>
-    <div auto-widget="liveDetail">
+    <div auto-widget="liveDetail" class="live-detail">
         测试直播间
     </div>
-    <div class="live-room">
-
+    <div auto-widget="listView" class="live-room">
+        <div class="card mt-2">
+            <div class="card-body">
+                <div class="media">
+                    <div class="media-body small">
+                        <div><span class="text-grey">{{: this.timestamp|timeText }}</span></div>
+                    </div>
+                </div>
+                <div class="live-card-content">{{ this.content }}</div>
+                {{ if(this.type===2&&this.extra){ }}
+                <img class="img-fluid" alt="" src="{{this.extra}}"/>
+                {{ } }}
+            </div>
+        </div>
     </div>
 </template>
 <style>
@@ -13,7 +25,7 @@
         border-radius: 4px;
     }
 </style>
-<script use-widget=".liveDetail">
+<script use-widget=".liveDetail,.listView">
     function LiveRoom($elem, conf) {
         var that = this;
         this.baseUrl = Elaina.data('apiUrl');
@@ -21,9 +33,14 @@
         this.$elem = $elem;
         this.socket = new SockJS(this.baseUrl + 'ws');
         this.client = Stomp.over(this.socket);
+        this.$liveDetail = Elaina.widget($elem.find('.live-detail'));
+        this.$listView = Elaina.widget($elem.find('.live-room'));
+        this.$listView.addTextFunc('timeText', function (x) {
+            return (new Date(x)).toLocaleString();
+        });
         //this.client.debug = null;
         this.client.connect({}, function (res) {
-            that.listen();
+            that.listen();/**/
         }, function (err) {
 
         });
@@ -37,29 +54,19 @@
                 Utils.tipBox(res.msg);
                 return;
             }
-            $.each(res.data.list, function (i, msg) {
-                that.createItem(msg);
-            })
+            that.$listView.setList(res.data.list);
         });
     };
 
     LiveRoom.prototype.createItem = function (msg) {
         if (msg.type === 0) {
             if (msg.content === 'stop') {
-                this.$elem.find('.live-room').prepend('<div class="alert alert-warning" role="alert">直播已结束</div>');
+                this.$liveDetail.setStatus(0);
             } else if (msg.content === 'update') {
-                console.log(msg.extra)
+                this.$liveDetail.setData(msg.extra)
             }
         } else {
-            var timestamp = (new Date(msg.timestamp)).toLocaleString();
-            var username = msg.username || '主播';
-            var card = $('<div class="card mt-2"><div class="card-body"><div class="media"><div class="media-body small"><div><span class="username"><a class="text-muted font-weight-bold">' + username + '</a></span><span class="text-grey ml-2">' + timestamp + '</span></div></div></div><div class="live-card-content"></div></div></div>');
-            var contentArea = card.find('.live-card-content');
-            contentArea.text(msg.content);
-            if (msg.type === 2 && msg.extra) {
-                contentArea.after('<img class="img-fluid" alt="" src="' + msg.extra + '"/>')
-            }
-            this.$elem.find('.live-room').prepend(card);
+            this.$listView.prepend(msg);
         }
     };
 

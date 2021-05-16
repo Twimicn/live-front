@@ -28,7 +28,7 @@
         </div>
         <div page-id="user_list" auto-widget="listView" class="search-list-container">
             <div class="live-list-item" data-id="{{this.id}}" item-click="enter">
-                <h4><img class="avatar-img" src="{{this.avatar||'./image/avatar.png'}}"/>{{this.name||this.username}}
+                <h4><img class="avatar-img" src="{{this.avatar}}"/>{{this.name||this.username}}
                 </h4>
             </div>
         </div>
@@ -138,6 +138,7 @@
                 that.$curListDom.show()
                 var list = $.map(res.data.list, function (x) {
                     if (x) x.extraInfo = x.extra ? JSON.parse(x.extra) : {};
+                    if (x.avatar === null) x.avatar = './image/avatar.png'
                     return x;
                 });
                 that.$curListView.setList(list);

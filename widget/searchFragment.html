@@ -1,11 +1,148 @@
 <template>
-    <h1>搜索</h1>
+    <div class="search-bar">
+        <input class="search-input" placeholder="检索" type="text">
+        <span class="search-btn ol-icon ol-icon-search" @click="$search"></span>
+    </div>
+    <div class="search-type-bar">
+        <label><input type="radio" class="search-type-input" name="search_type" value="live" checked><span
+                class="search-type-title">直播</span></label>
+        <label><input type="radio" class="search-type-input" name="search_type" value="article"><span
+                class="search-type-title">资讯</span></label>
+        <label><input type="radio" class="search-type-input" name="search_type" value="user"><span
+                class="search-type-title">用户</span></label>
+    </div>
+    <div>
+        <div page-id="live_list" auto-widget="listView" class="search-list-container">
+            <div class="live-list-item" data-id="{{this.liveId}}" item-click="enter">
+                <h4>{{this.title}}{{this.state===0?'<span class="live-list-item-status success">直播中</span>':'<span
+                        class="live-list-item-status">已结束</span>'}}</h4>
+                <p>额外信息</p>
+            </div>
+        </div>
+        <div page-id="article_list" auto-widget="listView" class="search-list-container">
+            <div class="live-list-item" data-id="{{this.liveId}}" item-click="enter">
+                <h4>{{this.title}}{{this.state===0?'<span class="live-list-item-status success">直播中</span>':'<span
+                        class="live-list-item-status">已结束</span>'}}</h4>
+                <p>额外信息</p>
+            </div>
+        </div>
+        <div page-id="user_list" auto-widget="listView" class="search-list-container">
+            <div class="live-list-item" data-id="{{this.id}}" item-click="enter">
+                <h4><img class="avatar-img" src="{{this.avatar||'./image/avatar.png'}}"/>{{this.name||this.username}}
+                </h4>
+            </div>
+        </div>
+    </div>
 </template>
+<style>
+    .search-list-container {
+        display: none;
+        overflow: auto;
+        height: calc(100vh - 12.5rem);
+    }
+
+    .search-bar {
+        margin: 1rem 2rem;
+        display: flex;
+        overflow: hidden;
+        border-radius: 2rem;
+        background: white;
+        box-shadow: 0 0 13px 1px #cccccc;
+    }
+
+    .search-input {
+        display: block;
+        width: 100%;
+        flex: 1;
+        background: white;
+        border: none;
+        padding: 0.25rem;
+        appearance: none;
+        margin-left: 1rem;
+        outline: none;
+    }
+
+    .search-btn {
+        display: block;
+        line-height: 1;
+        padding: 0.5rem 1rem;
+        background: deepskyblue;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .search-type-bar {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .search-type-input {
+        display: none;
+    }
+
+    .search-type-title {
+        padding: 0 1.5rem 0.5rem;
+        border-bottom: 2px solid transparent;
+    }
+
+    .search-type-input:checked + .search-type-title {
+        border-bottom: 2px solid dodgerblue;
+    }
+
+    .avatar-img {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 50%;
+        margin-right: 1rem;
+    }
+</style>
 <script>
     (function () {
         function SearchFragment($elem, conf) {
-
+            this.$elem = $elem;
+            this.curType = 'live';
+            this.$curListDom = $elem.find('[page-id="live_list"]');
+            this.$curListView = Elaina.widget(this.$curListDom);
+            this.$input = this.$elem.find('.search-input');
         }
+
+        SearchFragment.prototype.created = function () {
+            var that = this;
+            this.$input.on('keypress', function (e) {
+                if (e.keyCode === 13) {
+                    that.$search();
+                }
+            })
+            this.$elem.find('.search-type-bar').on('change', '.search-type-input', function (e) {
+                that.curType = $(this).val();
+                that.$curListDom = that.$elem.find('[page-id="' + $(this).val() + '_list"]');
+                that.$curListDom.show().siblings().hide();
+            });
+        };
+
+        var URL = {
+            live: 'api/live/search',
+            user: 'api/user/search',
+            article: 'api/article/search',
+        }
+
+        SearchFragment.prototype.$search = function () {
+            var that = this;
+            var keyword = this.$input.val();
+            this.$curListView = Elaina.widget(this.$curListDom);
+            Utils.apiPost(URL[this.curType], {
+                keyword: keyword,
+            }).then(function (res) {
+                that.$curListDom.show()
+                var list = $.map(res.data.list, function (x) {
+                    if (x) x.extraInfo = x.extra ? JSON.parse(x.extra) : {};
+                    return x;
+                });
+                that.$curListView.setList(list);
+            })
+        };
 
         Elaina.defineWidget(SearchFragment);
     })()

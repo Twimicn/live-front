@@ -1,7 +1,7 @@
 <template>
     <div page-id="live_list" auto-widget="listView" class="live-list-container">
         <div class="live-list-item" data-id="{{this.liveId}}" item-click="enter">
-            <h4>{{this.title}}{{this.status!==0?'<span class="live-list-item-status success">直播中</span>':'<span
+            <h4>{{this.title}}{{this.state===0?'<span class="live-list-item-status success">直播中</span>':'<span
                     class="live-list-item-status">已结束</span>'}}</h4>
             <p>额外信息</p>
         </div>
@@ -11,32 +11,6 @@
     .live-list-container {
         overflow: auto;
         height: calc(100vh - 7rem);
-    }
-
-    .live-list-item {
-        margin: .5rem;
-        padding: .75rem;
-        border-radius: .75rem;
-        box-shadow: 0 1px 5px #cecece;
-    }
-
-    .live-list-item:active {
-        background: #eeeeee;
-    }
-
-    .live-list-item-status {
-        display: inline-block;
-        padding: 0.25rem;
-        background: #888;
-        color: white;
-        border-radius: 0.35rem;
-        font-size: 1rem;
-        line-height: 1;
-        margin: 0 0.5rem;
-    }
-
-    .live-list-item-status.success {
-        background: #00ff76;
     }
 </style>
 <script>

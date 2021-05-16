@@ -3,6 +3,33 @@
     <div id="main_container"></div>
     <div id="bottom_nav" auto-widget="bottomNav"></div>
 </template>
+<style>
+    .live-list-item {
+        margin: .5rem;
+        padding: .75rem;
+        border-radius: .75rem;
+        box-shadow: 0 1px 5px #cecece;
+    }
+
+    .live-list-item:active {
+        background: #eeeeee;
+    }
+
+    .live-list-item-status {
+        display: inline-block;
+        padding: 0.25rem;
+        background: #888;
+        color: white;
+        border-radius: 0.35rem;
+        font-size: 1rem;
+        line-height: 1;
+        margin: 0 0.5rem;
+    }
+
+    .live-list-item-status.success {
+        background: #00ff76;
+    }
+</style>
 <script use-widget="titleBar,bottomNav,listView,homeFragment,infoFragment,myFragment,searchFragment">
     (function () {
         var $titleBar = Elaina.widget('#title_bar');

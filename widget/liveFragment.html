@@ -1,0 +1,46 @@
+<template>
+    <div page-id="title_bar" auto-widget="titleBar" data-title="直播" data-left-icon="left"
+         data-right-icon="comment"></div>
+    <div class="main-container" page-id="live_room">
+
+    </div>
+    <div page-id="bottom_nav" auto-widget="iconTabNav"></div>
+</template>
+<style>
+    .live-fragment {
+        background: white;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 99;
+        display: none;
+    }
+</style>
+<script use-widget="liveRoom">
+    (function () {
+        function LiveFragment($elem, conf) {
+            this.$elem = $elem;
+            $elem.addClass('live-fragment');
+            var $titleBar = Elaina.widget($elem.find('[page-id="title_bar"]'));
+            $titleBar.$on('click', function (which) {
+                if (which === 'left') {
+                    $elem.hide();
+                }
+            });
+        }
+
+        LiveFragment.prototype.loadLive = function (liveId) {
+            var liveRoom = Elaina.widget(this.$elem.find('[page-id="live_room"]'), 'liveRoom', {
+                liveId: liveId,
+            });
+        }
+
+        LiveFragment.prototype.show = function () {
+            this.$elem.show();
+        }
+
+        Elaina.defineWidget(LiveFragment);
+    })();
+</script>

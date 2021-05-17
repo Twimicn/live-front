@@ -22,7 +22,7 @@
         HomeFragment.prototype.created = function () {
             var that = this;
             this.$liveListView.$on('enter', function (data) {
-                Elaina.navigate('/live?id=' + data.data.liveId);
+                that.$emit('enterLive', data);
             });
             Utils.apiPost('api/live/list', {}).then(function (res) {
                 var list = $.map(res.data.list, function (x) {

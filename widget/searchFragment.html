@@ -154,6 +154,12 @@
                     return x;
                 });
                 that.$curListView.setList(list);
+                that.$curListView.$on('enter', function (data) {
+                    that.$emit('enter', {
+                        type: that.curType,
+                        item: data.data,
+                    })
+                });
             })
         };
 

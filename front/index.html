@@ -1,7 +1,13 @@
 <template>
     <div id="title_bar" auto-widget="titleBar" data-title="直播" data-left-icon="" data-right-icon=""></div>
-    <div id="main_container" class="main-container"></div>
+    <div id="main_container" class="main-container">
+        <div id="fragment_home" auto-widget="homeFragment"></div>
+        <div id="fragment_search" style="display: none;" auto-widget="searchFragment"></div>
+        <div id="fragment_info" style="display: none;" auto-widget="infoFragment"></div>
+        <div id="fragment_my" style="display: none;" auto-widget="myFragment"></div>
+    </div>
     <div id="bottom_nav" auto-widget="iconTabNav"></div>
+    <div id="fragment_live" auto-widget="liveFragment"></div>
 </template>
 <style>
     .live-list-item {
@@ -31,7 +37,7 @@
     }
 
     @media screen and (min-aspect-ratio: 1/1) {
-        .main-container{
+        .main-container {
             position: fixed;
             left: 4rem;
             right: 0;
@@ -44,8 +50,9 @@
         }
     }
 </style>
-<script use-widget="titleBar,iconTabNav,listView,homeFragment,infoFragment,myFragment,searchFragment">
+<script use-widget="titleBar,iconTabNav,listView,homeFragment,infoFragment,myFragment,searchFragment,liveFragment">
     (function () {
+        var router = Elaina.router();
         var $titleBar = Elaina.widget('#title_bar');
         $titleBar.$on('click', function (which) {
             console.log(which)
@@ -58,8 +65,27 @@
             {icon: 'user', text: '我的', action: 'my'},
         ], 0);
         $bottomNav.$on('change', function (data) {
-            Elaina.widget('#main_container', data.action + 'Fragment', {});
+            $('#fragment_' + data.action).show().siblings().hide();
         });
-        Elaina.widget('#main_container', 'homeFragment', {});
+        var $liveFragment = Elaina.widget('#fragment_live');
+        var $homeFragment = Elaina.widget('#fragment_home');
+        $homeFragment.$on('enterLive', function (data) {
+            loadLive(data.data.liveId);
+        });
+        var $searchFragment = Elaina.widget('#fragment_search');
+        $searchFragment.$on('enter', function (data) {
+            if (data.type === 'live') {
+                loadLive(data.item.liveId);
+            }
+        });
+
+        function loadLive(liveId) {
+            $liveFragment.loadLive(liveId);
+            $liveFragment.show();
+        }
+
+        if (router.query.id) {
+            loadLive(router.query.id);
+        }
     })();
 </script>

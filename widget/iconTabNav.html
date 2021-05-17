@@ -1,10 +1,10 @@
 <template>
-    <div class="bottom-nav-item-group">
+    <div class="icon-tab-nav-item-group">
 
     </div>
 </template>
 <style>
-    .bottom-nav {
+    .icon-tab-nav {
         width: 100%;
         border-top: solid 1px #ccc;
         background-color: #edededcc;
@@ -14,46 +14,62 @@
         box-shadow: 0 -1px 16px #bfbebe;
     }
 
-    .bottom-nav-item-group {
+    .icon-tab-nav-item-group {
         display: flex;
         flex-direction: row;
         justify-content: space-around;
     }
 
-    .bottom-nav-item {
+    .icon-tab-nav-item {
         padding: 0.25rem 0.75rem;
     }
 
-    .bottom-nav-item-icon {
+    .icon-tab-nav-item-icon {
         font-size: 2.5rem;
         line-height: 1;
         text-align: center;
         color: #999999;
     }
 
-    .bottom-nav-item-text {
+    .icon-tab-nav-item-text {
         font-size: 0.5rem;
         text-align: center;
         color: #555555;
     }
 
-    .bottom-nav-item.current .bottom-nav-item-icon,
-    .bottom-nav-item.current .bottom-nav-item-text {
+    .icon-tab-nav-item.current .icon-tab-nav-item-icon,
+    .icon-tab-nav-item.current .icon-tab-nav-item-text {
         color: deepskyblue;
     }
 
+    @media screen and (min-aspect-ratio: 1/1) {
+        .icon-tab-nav {
+            left: 0;
+            top: 0;
+            padding-top: 3rem;
+            width: 4rem;
+        }
+
+        .icon-tab-nav-item-group {
+            flex-direction: column;
+        }
+
+        .icon-tab-nav-item {
+            margin-bottom: 1rem;
+        }
+    }
 </style>
 <script>
     (function () {
-        function BottomNav($elem, conf) {
+        function IconTabNav($elem, conf) {
             this.$elem = $elem;
             this.navs = [];
-            $elem.addClass('bottom-nav');
+            $elem.addClass('icon-tab-nav');
         }
 
-        BottomNav.prototype.created = function () {
+        IconTabNav.prototype.created = function () {
             var that = this;
-            this.$elem.find('.bottom-nav-item-group').on('click', '.bottom-nav-item', function (e) {
+            this.$elem.find('.icon-tab-nav-item-group').on('click', '.icon-tab-nav-item', function (e) {
                 $(this).addClass('current').siblings().removeClass('current');
                 var index = $(this).index();
                 var nav = that.navs[index];
@@ -61,18 +77,18 @@
             });
         };
 
-        BottomNav.prototype.setNavs = function (list, index) {
+        IconTabNav.prototype.setNavs = function (list, index) {
             if ($.isArray(list)) {
                 this.navs = list;
                 var html = '';
                 for (var i = 0; i < list.length; i++) {
                     var f = list[i];
-                    html += '<div class="bottom-nav-item' + (i === index ? ' current' : '') + '"><div class="bottom-nav-item-icon ol-icon ol-icon-' + f.icon + '"></div><div class="bottom-nav-item-text">' + f.text + '</div></div>'
+                    html += '<div class="icon-tab-nav-item' + (i === index ? ' current' : '') + '"><div class="icon-tab-nav-item-icon ol-icon ol-icon-' + f.icon + '"></div><div class="icon-tab-nav-item-text">' + f.text + '</div></div>'
                 }
-                this.$elem.find('.bottom-nav-item-group').html(html);
+                this.$elem.find('.icon-tab-nav-item-group').html(html);
             }
         };
 
-        Elaina.defineWidget(BottomNav);
+        Elaina.defineWidget(IconTabNav);
     })();
 </script>

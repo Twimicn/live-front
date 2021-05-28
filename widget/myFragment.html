@@ -1,21 +1,28 @@
 <template>
-    <div class="user-card">
+    <form class="user-card user-login-form" method="post">
+        <div class="alert-container"></div>
         <div class="form-item">
             <label for="username" class="form-item-label">用户名</label>
-            <input id="username" type="text" class="form-item-input"/>
+            <input id="username" name="username" type="text" class="form-item-input" required autofocus/>
         </div>
         <div class="form-item">
             <label for="password" class="form-item-label">密码</label>
-            <input id="password" type="password" class="form-item-input"/>
+            <input id="password" name="password" type="password" class="form-item-input" required/>
         </div>
         <div class="form-item mt-4">
-            <input type="button" class="form-item-button" value="登录"/>
+            <input type="submit" class="form-item-button" value="登录"/>
+        </div>
+    </form>
+    <div class="user-card user-card-info">
+        <img class="user-card-avatar" src="./image/avatar.png" alt="">
+        <div class="user-card-info-detail">
+            <div>Username</div>
+            <div>Username</div>
         </div>
     </div>
 </template>
 <style>
     .user-card {
-        margin: 2rem auto;
         padding: .75rem;
         border-radius: .75rem;
         box-shadow: 0 1px 5px #cecece;
@@ -23,6 +30,10 @@
         width: calc(100% - 2rem);
         backdrop-filter: blur(7px);
         background-color: #fffa;
+    }
+
+    .user-card.user-login-form {
+        margin: 2rem auto;
     }
 
     .form-item {
@@ -58,11 +69,48 @@
         border-radius: 1.5rem;
         outline: none;
     }
+
+    .user-card-avatar {
+        width: 5rem;
+        height: 5rem;
+        display: inline-block;
+        border-radius: 50%;
+    }
+
+    .user-card-info {
+        margin-left: 1rem;
+        display: flex;
+    }
+
+    .user-card-info-detail {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        margin-left: 1rem;
+    }
 </style>
 <script>
     (function () {
         function MyFragment($elem, conf) {
-            console.log(233)
+            $elem.find('.user-login-form').submit(function () {
+                var loadingBox = Utils.loadingBox('登录中...');
+                $(this).ajaxSubmit({
+                    url: Elaina.data('apiUrl') + 'api/user/login',
+                    dataType: 'json',
+                    success: function (res) {
+                        if (res.status !== 0) {
+                            Utils.showAlert($elem.find('.alert-container'), res.msg, 'danger', true);
+                        } else {
+                            Elaina.storage('user', res.data);
+                        }
+                        loadingBox.hide();
+                    }, error: function () {
+                        loadingBox.hide();
+                        Utils.tipBox('服务器发生了一些错误');
+                    }
+                });
+                return false;
+            });
         }
 
         Elaina.defineWidget(MyFragment);

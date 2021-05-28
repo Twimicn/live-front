@@ -1,10 +1,46 @@
 <template>
-    <h1>资讯</h1>
+    <div page-id="article_list" auto-widget="listView" class="info-list-container">
+        <div class="live-list-item" data-id="{{this.id}}" item-click="enter">
+            <h4>{{this.title}}</h4>
+            <p>{{this.content.substr(0,20)}}</p>
+        </div>
+    </div>
 </template>
+<style>
+    .info-list-container {
+        overflow: auto;
+        height: calc(100vh - 7rem);
+    }
+
+    @media screen and (min-aspect-ratio: 1/1) {
+        .info-list-container {
+            max-width: 60rem;
+            height: calc(100vh - 3rem);
+        }
+    }
+</style>
 <script>
     (function () {
         function InfoFragment($elem, conf) {
+            this.$infoListView = Elaina.widget($elem.find('[page-id="article_list"]'));
+        }
 
+        InfoFragment.prototype.created = function () {
+            var that = this;
+            this.$infoListView.$on('enter', function (data) {
+                that.$emit('enterArticle', data);
+            });
+        };
+
+        InfoFragment.prototype.onShow = function () {
+            var that = this;
+            Utils.apiPost('api/article/list', {}).then(function (res) {
+                var list = $.map(res.data.list, function (x) {
+                    if (x) x.extraInfo = x.extra ? JSON.parse(x.extra) : {};
+                    return x;
+                });
+                that.$infoListView.setList(list);
+            });
         }
 
         Elaina.defineWidget(InfoFragment);

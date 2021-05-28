@@ -31,6 +31,11 @@
             this.$liveListView.$on('enter', function (data) {
                 that.$emit('enterLive', data);
             });
+            this.onShow();
+        };
+
+        HomeFragment.prototype.onShow = function () {
+            var that = this;
             Utils.apiPost('api/live/list', {}).then(function (res) {
                 var list = $.map(res.data.list, function (x) {
                     if (x) x.extraInfo = x.extra ? JSON.parse(x.extra) : {};
@@ -38,7 +43,7 @@
                 });
                 that.$liveListView.setList(list);
             });
-        };
+        }
 
         Elaina.defineWidget(HomeFragment);
     })()

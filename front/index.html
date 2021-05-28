@@ -61,23 +61,30 @@
 </style>
 <script use-widget="titleBar,iconTabNav,listView,homeFragment,infoFragment,myFragment,searchFragment,liveFragment">
     (function () {
+        var NAV_LIST = [
+            {icon: 'home', text: '主页', action: 'home'},
+            {icon: 'search', text: '搜索', action: 'search'},
+            {icon: 'menu', text: '资讯', action: 'info'},
+            {icon: 'user', text: '我的', action: 'my'},
+        ];
+
         var router = Elaina.router();
         var $titleBar = Elaina.widget('#title_bar');
         $titleBar.$on('click', function (which) {
             console.log(which)
         });
         var $bottomNav = Elaina.widget('#bottom_nav');
-        $bottomNav.setNavs([
-            {icon: 'home', text: '主页', action: 'home'},
-            {icon: 'search', text: '搜索', action: 'search'},
-            {icon: 'menu', text: '资讯', action: 'info'},
-            {icon: 'user', text: '我的', action: 'my'},
-        ], 0);
+        $bottomNav.setNavs(NAV_LIST, 0);
         $bottomNav.$on('change', function (data) {
             $('#fragment_' + data.action).show().siblings().hide();
             var cur = Elaina.widget('#fragment_' + data.action);
             if (cur && typeof cur.onShow === 'function') {
                 cur.onShow();
+            }
+            if (data.index === 0) {
+                $titleBar.setTitle('直播');
+            } else {
+                $titleBar.setTitle(NAV_LIST[data.index].text);
             }
         });
         var $liveFragment = Elaina.widget('#fragment_live');

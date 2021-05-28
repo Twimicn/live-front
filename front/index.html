@@ -75,6 +75,10 @@
         ], 0);
         $bottomNav.$on('change', function (data) {
             $('#fragment_' + data.action).show().siblings().hide();
+            var cur = Elaina.widget('#fragment_' + data.action);
+            if (cur && typeof cur.onShow === 'function') {
+                cur.onShow();
+            }
         });
         var $liveFragment = Elaina.widget('#fragment_live');
         var $homeFragment = Elaina.widget('#fragment_home');

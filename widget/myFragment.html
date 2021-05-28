@@ -13,11 +13,10 @@
             <input type="submit" class="form-item-button" value="登录"/>
         </div>
     </form>
-    <div class="user-card user-card-info">
-        <img class="user-card-avatar" src="./image/avatar.png" alt="">
+    <div class="user-card user-card-info" style="display: none;">
+        <img class="user-card-avatar" src="" alt="">
         <div class="user-card-info-detail">
-            <div>Username</div>
-            <div>Username</div>
+            <div class="user-card-info-username">Username</div>
         </div>
     </div>
 </template>
@@ -80,6 +79,7 @@
     .user-card-info {
         margin-left: 1rem;
         display: flex;
+        margin-top: 1rem;
     }
 
     .user-card-info-detail {
@@ -92,6 +92,8 @@
 <script>
     (function () {
         function MyFragment($elem, conf) {
+            this.$elem = $elem;
+            var that = this;
             $elem.find('.user-login-form').submit(function () {
                 var loadingBox = Utils.loadingBox('登录中...');
                 $(this).ajaxSubmit({
@@ -102,6 +104,7 @@
                             Utils.showAlert($elem.find('.alert-container'), res.msg, 'danger', true);
                         } else {
                             Elaina.storage('user', res.data);
+                            that.checkLogin(res.data);
                         }
                         loadingBox.hide();
                     }, error: function () {
@@ -111,6 +114,24 @@
                 });
                 return false;
             });
+        }
+
+        MyFragment.prototype.onShow = function () {
+            var user = Elaina.storage('user');
+            this.checkLogin(user);
+        };
+
+        MyFragment.prototype.checkLogin = function (user) {
+            if (user && user.token && (new Date(user.expire) > new Date())) {
+                this.$elem.find('.user-login-form').hide();
+                this.$elem.find('.user-card-info').show();
+                this.$elem.find('.user-card-avatar').attr('src', user.avatar || './image/avatar.png');
+                this.$elem.find('.user-card-info-username').text(user.name);
+            } else {
+                Elaina.storage('user', null);
+                this.$elem.find('.user-login-form').show();
+                this.$elem.find('.user-card-info').hide();
+            }
         }
 
         Elaina.defineWidget(MyFragment);

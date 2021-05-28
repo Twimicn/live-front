@@ -10,11 +10,20 @@
     <div id="fragment_live" auto-widget="liveFragment"></div>
 </template>
 <style>
+    #app {
+        background: url("https://ww4.sinaimg.cn/bmiddle/006jNx9Ggy1gqyg5efzs6j30yi1pcn7s.jpg") no-repeat;
+        background-size: cover;
+        width: 100vw;
+        height: 100vh;
+    }
+
     .live-list-item {
         margin: .5rem;
         padding: .75rem;
         border-radius: .75rem;
         box-shadow: 0 1px 5px #cecece;
+        backdrop-filter: blur(7px);
+        background-color: #fffa;
     }
 
     .live-list-item:active {

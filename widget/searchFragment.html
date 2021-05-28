@@ -20,10 +20,9 @@
             </div>
         </div>
         <div page-id="article_list" auto-widget="listView" class="search-list-container">
-            <div class="live-list-item" data-id="{{this.liveId}}" item-click="enter">
-                <h4>{{this.title}}{{this.state===0?'<span class="live-list-item-status success">直播中</span>':'<span
-                        class="live-list-item-status">已结束</span>'}}</h4>
-                <p>额外信息</p>
+            <div class="live-list-item" data-id="{{this.id}}" item-click="enter">
+                <h4>{{this.title}}</h4>
+                <p>{{this.content.substr(0,20)}}</p>
             </div>
         </div>
         <div page-id="user_list" auto-widget="listView" class="search-list-container">
@@ -38,7 +37,7 @@
     .search-list-container {
         display: none;
         overflow: auto;
-        height: calc(100vh - 12.5rem);
+        height: calc(100vh - 13rem);
     }
 
     .search-bar {

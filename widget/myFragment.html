@@ -1,10 +1,68 @@
 <template>
-    <h1>我的</h1>
+    <div class="user-card">
+        <div class="form-item">
+            <label for="username" class="form-item-label">用户名</label>
+            <input id="username" type="text" class="form-item-input"/>
+        </div>
+        <div class="form-item">
+            <label for="password" class="form-item-label">密码</label>
+            <input id="password" type="password" class="form-item-input"/>
+        </div>
+        <div class="form-item mt-4">
+            <input type="button" class="form-item-button" value="登录"/>
+        </div>
+    </div>
 </template>
+<style>
+    .user-card {
+        margin: 2rem auto;
+        padding: .75rem;
+        border-radius: .75rem;
+        box-shadow: 0 1px 5px #cecece;
+        max-width: 30rem;
+        width: calc(100% - 2rem);
+        backdrop-filter: blur(7px);
+        background-color: #fffa;
+    }
+
+    .form-item {
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-item-label {
+        display: block;
+    }
+
+    .form-item-input {
+        display: block;
+        width: 100%;
+        border: 1px solid #cccccc;
+        border-radius: 0.25rem;
+        outline: 0;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .form-item-input:active,
+    .form-item-input:focus {
+        border-color: deepskyblue;
+    }
+
+    .form-item-button {
+        display: block;
+        width: 100%;
+        background: deepskyblue;
+        border: none;
+        padding: 0.5rem;
+        color: white;
+        border-radius: 1.5rem;
+        outline: none;
+    }
+</style>
 <script>
     (function () {
         function MyFragment($elem, conf) {
-
+            console.log(233)
         }
 
         Elaina.defineWidget(MyFragment);

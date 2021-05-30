@@ -1,0 +1,42 @@
+<template>
+    <div class="tab-card-bar">
+
+    </div>
+    <div class="tab-card-container">
+        <slot></slot>
+    </div>
+</template>
+<style>
+    .tab-card-bar {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+</style>
+<script>
+    (function () {
+        var INDEX = 0;
+        Elaina.defineWidget({
+            init: function ($elem, conf) {
+                var list = [];
+                var cardIndex = (++INDEX);
+                if (conf.list) {
+                    if ($.isArray(conf.list)) {
+                        list = conf.list
+                    } else {
+                        list = conf.list.split(',')
+                    }
+                }
+                var inputBar = $elem.find('.tab-card-bar');
+                $.each(list, function (i, v) {
+                    inputBar.append('<label><input type="radio" class="search-type-input" name="tab_card_' + cardIndex + '" value="' + i + '"' + (i === 0 ? ' checked' : '') + '><span class="search-type-title">' + v + '</span></label>')
+                });
+                $elem.on('change', 'input[type=radio]', function () {
+                    var i = +$(this).val();
+                    $elem.find('.tab-card-container').children(':eq(' + i + ')').show().siblings().hide();
+                });
+                $elem.find('.tab-card-container').children(':eq(0)').show().siblings().hide();
+            },
+        });
+    })();
+</script>
